@@ -1,3 +1,15 @@
+# version: '3.4'
+
+# services:
+#   lms:
+#     image: lms
+#     build:
+#       context: .
+#       dockerfile: ./Dockerfile
+
+#   docker_build_and_push:
+#     name: Docker build and push
+#     uses: cloudposse/github-action-docker-build-push@1.16.0
 version: '3.4'
 
 services:
@@ -7,6 +19,24 @@ services:
       context: .
       dockerfile: ./Dockerfile
 
-  docker_build_and_push:
-    name: Docker build and push
-    uses: cloudposse/github-action-docker-build-push@1.16.0
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Build
+        id: build
+        uses: cloudposse/github-action-docker-build-push@main
+        with:
+          registry: registry.hub.docker.com
+          organization: "${{ github.event.repository.owner.login }}"
+          repository: "${{ github.event.repository.name }}"
+          login: "${{ secrets.DOCKERHUB_USERNAME }}"
+          password: "${{ secrets.DOCKERHUB_PASSWORD }}"
+          platforms: linux/amd64,linux/arm64
+
+    outputs:
+      image: ${{ steps.build.outputs.image }}
+      tag: ${{ steps.build.outputs.tag }}
