@@ -6,6 +6,7 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
-              - name: Docker build and push
-                uses: cloudposse/github-action-docker-build-push@1.16.0
-            
+
+  docker_build_and_push:
+    name: Docker build and push
+    uses: cloudposse/github-action-docker-build-push@1.16.0
