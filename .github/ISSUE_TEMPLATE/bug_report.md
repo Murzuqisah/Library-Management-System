@@ -4,6 +4,32 @@ about: Create a report to help us improve
 title: ''
 labels: ''
 assignees: ''
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - db
+
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: library_db
+      MYSQL_USER: library_user
+      MYSQL_PASSWORD: library_password
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
+
 
 ---
 
